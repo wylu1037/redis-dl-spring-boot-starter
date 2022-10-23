@@ -1,2 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-cn.edu.hust.redisdl.spring.boot.autoconfigure.RedisDistributedLockAutoConfigure
