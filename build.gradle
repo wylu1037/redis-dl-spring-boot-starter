@@ -1,0 +1,78 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.3.7.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.12.RELEASE'
+}
+apply plugin: 'maven-publish'
+
+group 'cn.edu.hust'
+version '2.3.7-SNAPSHOT'
+description 'redis-dl-spring-boot-starter'
+
+repositories {
+    maven { url "https://maven.aliyun.com/nexus/content/groups/public/" }
+    mavenCentral()
+    gradlePluginPortal()
+}
+
+// 依赖版本号管理
+ext {
+    libs = [
+        junit: '5.9.0',
+        redisson: '3.13.6'
+    ]
+}
+
+dependencyManagement {
+    imports {
+        mavenBom(SpringBootPlugin.BOM_COORDINATES)
+    }
+    dependencies {
+        dependency "org.junit.jupiter:junit-jupiter-api:${libs.junit}"
+        dependency "org.junit.jupiter:junit-jupiter-engine:${libs.junit}"
+        dependency "org.redisson:redisson-spring-boot-starter:${libs.redisson}"
+    }
+}
+
+dependencies {
+    implementation (
+        'org.springframework.boot:spring-boot-autoconfigure',
+        'org.springframework.boot:spring-boot-configuration-processor',
+        'org.redisson:redisson-spring-boot-starter'
+
+    )
+    testImplementation "org.junit.jupiter:junit-jupiter-api"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding("utf-8")
+}
+
+bootJar {
+    enabled = false
+}
+jar {
+    enabled = true
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = "${project.group}"
+            artifactId = "${project.description}"
+            version = "${project.version}"
+            artifact jar
+        }
+    }
+
+    repositories {
+        mavenLocal()
+    }
+}
